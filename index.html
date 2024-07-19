@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract ADM! </title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Extract ADM!</h1>
+    <textarea id="jsonInput" placeholder='Paste your object here'></textarea>
+    <button onclick="extract()">Parse</button>
+    
+    <div class="result">
+        <h2>Ad Markup:</h2>
+        <pre id="admOutput"></pre>
+        <button onclick="copy()">Copy to Clipboard</button>
+    </div>
+
+    <script>
+        function extract() {
+            const input = document.getElementById('jsonInput').value;
+            try {
+                const obj = JSON.parse(input);
+                const responseBody = JSON.parse(obj.data[0].RESPONSE_BODY);
+                const admContent = responseBody.adm;
+                document.getElementById('admOutput').innerText = admContent;
+            } catch (e) {
+                document.getElementById('admOutput').innerText = 'Invalid Response.';
+            }
+        }
+
+        function copy() {
+            const admContent = document.getElementById('admOutput').innerText;
+            navigator.clipboard.writeText(admContent).then(() => {
+                alert('ADM copied to clipboard!');
+            }).catch(err => {
+                alert('Error. Failed to copy to Clipboard ', err);
+            });
+        }
+    </script>
+</body>
+</html>
